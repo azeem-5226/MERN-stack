@@ -6,6 +6,7 @@ import Navbar from "./components/Navbar";
 
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import ForgotPassword from "./pages/ForgotPassword";
 
 function Dashboard() {
   return (
@@ -61,6 +62,12 @@ function App() {
       <Route
         path="/signup"
         element={<Signup />}
+      />
+
+      {/* FORGOT PASSWORD */}
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
       />
 
       {/* DASHBOARD */}

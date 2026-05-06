@@ -1,11 +1,15 @@
 import axios from "axios";
 
+// =========================
 // PORT API
+// =========================
 const API = axios.create({
   baseURL: "http://localhost:5000/api/ports"
 });
 
+// =========================
 // AUTH API
+// =========================
 const AUTH_API = axios.create({
   baseURL: "http://localhost:5000/api/auth"
 });
@@ -47,3 +51,10 @@ export const signupUser = (data) =>
 // ✅ Login
 export const loginUser = (data) =>
   AUTH_API.post("/login", data);
+
+// ✅ Forgot Password
+export const forgotPassword = (data) =>
+  AUTH_API.put(
+    "/forgot-password",
+    data
+  );
