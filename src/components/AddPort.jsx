@@ -31,9 +31,16 @@ function AddPort() {
 
       alert("Port Registered Successfully ✅");
     } catch (err) {
-      alert("Registration Failed ❌");
-      console.log(err);
-    } finally {
+
+  console.log(err);
+
+  const errorMessage =
+    err.response?.data?.message ||
+    "Registration Failed ❌";
+
+  alert(errorMessage);
+
+} finally {
       setIsLoading(false);
     }
   };
