@@ -7,9 +7,10 @@ function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false); // ✅ Fixed: added state
 
   const handleReset = async (e) => {
-    e.preventDefault(); // Form refresh rokne ke liye
+    e.preventDefault();
     if (!email || !newPassword) {
       alert("Please fill all fields");
       return;
@@ -18,7 +19,7 @@ function ForgotPassword() {
     setLoading(true);
     try {
       const res = await forgotPassword({ email, newPassword });
-      alert(res.data.message);
+      alert(res.data.message || "Password updated successfully! ✅");
       navigate("/");
     } catch (err) {
       const errorMessage = err.response?.data?.message || "Password reset failed ❌";
@@ -46,7 +47,7 @@ function ForgotPassword() {
               <span style={styles.inputIcon}>@</span>
               <input
                 type="email"
-                placeholder="admin@porthub.com"
+                placeholder="admin@example.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 style={styles.input}
@@ -61,13 +62,20 @@ function ForgotPassword() {
             <div style={styles.inputWrapper}>
               <span style={styles.inputIcon}>🔑</span>
               <input
-                type="password"
+                type={showPassword ? "text" : "password"} // ✅ Fixed: Toggle type
                 placeholder="Enter new password"
                 value={newPassword}
                 onChange={(e) => setNewPassword(e.target.value)}
-                style={styles.input}
+                style={{ ...styles.input, paddingRight: "45px" }} // Space for eye button
                 required
               />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={styles.eyeBtn} // ✅ Fixed: Style added below
+              >
+                {showPassword ? "🙈" : "👁️"}
+              </button>
             </div>
           </div>
 
@@ -77,7 +85,7 @@ function ForgotPassword() {
             disabled={loading}
             style={{
               ...styles.button,
-              backgroundColor: loading ? "#fcd34d" : "#f59e0b", // Professional Amber/Orange
+              backgroundColor: loading ? "#fcd34d" : "#f59e0b",
               cursor: loading ? "not-allowed" : "pointer",
             }}
           >
@@ -100,8 +108,9 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f5f9", // Consistent light grey background
+    backgroundColor: "#f1f5f9",
     fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+    padding: "20px",
   },
   card: {
     background: "#ffffff",
@@ -109,7 +118,7 @@ const styles = {
     borderRadius: "16px",
     width: "100%",
     maxWidth: "400px",
-    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)",
+    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
     border: "1px solid #e2e8f0",
   },
   header: {
@@ -125,7 +134,6 @@ const styles = {
     fontWeight: "800",
     color: "#1e293b",
     margin: "0 0 8px 0",
-    letterSpacing: "-0.5px",
   },
   subTitle: {
     fontSize: "14px",
@@ -146,7 +154,6 @@ const styles = {
     fontSize: "13px",
     fontWeight: "600",
     color: "#475569",
-    marginLeft: "2px",
   },
   inputWrapper: {
     position: "relative",
@@ -167,7 +174,19 @@ const styles = {
     fontSize: "15px",
     outline: "none",
     boxSizing: "border-box",
-    transition: "border 0.2s ease",
+  },
+  eyeBtn: {
+    position: "absolute",
+    right: "12px",
+    background: "none",
+    border: "none",
+    cursor: "pointer",
+    fontSize: "18px",
+    padding: "0",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "#64748b",
   },
   button: {
     width: "100%",
@@ -178,7 +197,7 @@ const styles = {
     fontSize: "16px",
     fontWeight: "700",
     marginTop: "10px",
-    boxShadow: "0 4px 6px -1px rgba(245, 158, 11, 0.2)",
+    transition: "all 0.2s ease",
   },
   footerText: {
     marginTop: "24px",
