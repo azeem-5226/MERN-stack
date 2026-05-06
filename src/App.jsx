@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import AddPort from "./components/AddPort";
 import SearchPort from "./components/SearchPort";
 import Navbar from "./components/Navbar";
-
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
@@ -52,33 +52,40 @@ function App() {
 
     <Routes>
 
-      {/* LOGIN */}
-      <Route
-        path="/"
-        element={<Login />}
-      />
+  {/* LANDING PAGE */}
+  <Route
+    path="/"
+    element={<Landing />}
+  />
 
-      {/* SIGNUP */}
-      <Route
-        path="/signup"
-        element={<Signup />}
-      />
+  {/* LOGIN */}
+  <Route
+    path="/login"
+    element={<Login />}
+  />
 
-      {/* FORGOT PASSWORD */}
-      <Route
-        path="/forgot-password"
-        element={<ForgotPassword />}
-      />
+  {/* SIGNUP */}
+  <Route
+    path="/signup"
+    element={<Signup />}
+  />
 
-      {/* DASHBOARD */}
-      <Route
-        path="/dashboard"
-        element={<Dashboard />}
-      />
+  {/* FORGOT PASSWORD */}
+  <Route
+    path="/forgot-password"
+    element={<ForgotPassword />}
+  />
 
-    </Routes>
+  {/* DASHBOARD */}
+  <Route
+    path="/dashboard"
+    element={<Dashboard />}
+  />
+
+</Routes>
 
   );
+
 }
 
 const styles = {

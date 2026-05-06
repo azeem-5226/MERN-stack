@@ -1,216 +1,396 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+
 import { forgotPassword } from "../services/api";
 
 function ForgotPassword() {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // ✅ Fixed: added state
 
-  const handleReset = async (e) => {
-    e.preventDefault();
+  const navigate = useNavigate();
+
+  const [email, setEmail] =
+    useState("");
+
+  const [newPassword, setNewPassword] =
+    useState("");
+
+  const [showPassword, setShowPassword] =
+    useState(false);
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const handleReset = async () => {
+
     if (!email || !newPassword) {
+
       alert("Please fill all fields");
       return;
+
     }
 
     setLoading(true);
+
     try {
-      const res = await forgotPassword({ email, newPassword });
-      alert(res.data.message || "Password updated successfully! ✅");
-      navigate("/");
+
+      const res =
+        await forgotPassword({
+          email,
+          newPassword,
+        });
+
+      alert(res.data.message);
+
+      navigate("/login");
+
     } catch (err) {
-      const errorMessage = err.response?.data?.message || "Password reset failed ❌";
+
+      const errorMessage =
+        err.response?.data?.message ||
+        "Password reset failed ❌";
+
       alert(errorMessage);
+
     } finally {
+
       setLoading(false);
+
     }
   };
 
   return (
+
     <div style={styles.page}>
+
+      {/* RGB */}
+
+      <div style={styles.blueGlow}></div>
+      <div style={styles.cyanGlow}></div>
+
+      {/* CARD */}
+
       <div style={styles.card}>
-        {/* Header Section */}
+
+        {/* HEADER */}
+
         <div style={styles.header}>
-          <div style={styles.logoBadge}>🔐</div>
-          <h1 style={styles.mainTitle}>Reset Password</h1>
-          <p style={styles.subTitle}>Enter your registered email and a new secure password</p>
+
+          <div style={styles.logoBox}>
+            🔐
+          </div>
+
+          <h1 style={styles.mainTitle}>
+            NEXCORE
+          </h1>
+
+          <p style={styles.subTitle}>
+
+            Reset your secure infrastructure
+            account password
+
+          </p>
+
         </div>
 
-        <form onSubmit={handleReset} style={styles.form}>
+        {/* FORM */}
+
+        <div style={styles.form}>
+
           {/* EMAIL */}
+
           <div style={styles.inputGroup}>
-            <label style={styles.label}>Registered Email</label>
+
+            <label style={styles.label}>
+              Email Address
+            </label>
+
             <div style={styles.inputWrapper}>
-              <span style={styles.inputIcon}>@</span>
+
+              <span style={styles.inputIcon}>
+                @
+              </span>
+
               <input
                 type="email"
-                placeholder="admin@example.com"
+                placeholder="admin@nexcore.com"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
                 style={styles.input}
-                required
               />
+
             </div>
+
           </div>
 
-          {/* NEW PASSWORD */}
+          {/* PASSWORD */}
+
           <div style={styles.inputGroup}>
-            <label style={styles.label}>New Password</label>
+
+            <label style={styles.label}>
+              New Password
+            </label>
+
             <div style={styles.inputWrapper}>
-              <span style={styles.inputIcon}>🔑</span>
+
+              <span style={styles.inputIcon}>
+                🔒
+              </span>
+
               <input
-                type={showPassword ? "text" : "password"} // ✅ Fixed: Toggle type
-                placeholder="Enter new password"
+                type={
+                  showPassword
+                    ? "text"
+                    : "password"
+                }
+                placeholder="••••••••"
                 value={newPassword}
-                onChange={(e) => setNewPassword(e.target.value)}
-                style={{ ...styles.input, paddingRight: "45px" }} // Space for eye button
-                required
+                onChange={(e) =>
+                  setNewPassword(
+                    e.target.value
+                  )
+                }
+                style={styles.input}
               />
+
               <button
                 type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                style={styles.eyeBtn} // ✅ Fixed: Style added below
+                onClick={() =>
+                  setShowPassword(
+                    !showPassword
+                  )
+                }
+                style={styles.eyeBtn}
               >
-                {showPassword ? "🙈" : "👁️"}
+                {
+                  showPassword
+                    ? "🙈"
+                    : "👁️"
+                }
               </button>
+
             </div>
+
           </div>
 
-          {/* RESET BUTTON */}
+          {/* BUTTON */}
+
           <button
-            type="submit"
-            disabled={loading}
+            onClick={handleReset}
             style={{
               ...styles.button,
-              backgroundColor: loading ? "#fcd34d" : "#f59e0b",
-              cursor: loading ? "not-allowed" : "pointer",
+              opacity:
+                loading ? 0.7 : 1,
             }}
           >
-            {loading ? "Updating Security..." : "Update Password"}
+
+            {
+              loading
+                ? "Updating..."
+                : "Reset Password"
+            }
+
           </button>
-        </form>
+
+        </div>
+
+        {/* FOOTER */}
 
         <p style={styles.footerText}>
-          Remember your password? 
-          <Link to="/" style={styles.link}> Back to Login</Link>
+
+          Back to
+
+          <Link
+            to="/login"
+            style={styles.link}
+          >
+            {" "}
+            Sign In
+          </Link>
+
         </p>
+
       </div>
+
     </div>
+
   );
 }
 
 const styles = {
+
   page: {
     minHeight: "100vh",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#f1f5f9",
-    fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+    background:
+      "linear-gradient(135deg,#020617,#0f172a,#111827)",
+    fontFamily:
+      "'Inter', system-ui, sans-serif",
+    overflow: "hidden",
+    position: "relative",
     padding: "20px",
   },
-  card: {
-    background: "#ffffff",
-    padding: "48px 40px",
-    borderRadius: "16px",
-    width: "100%",
-    maxWidth: "400px",
-    boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)",
-    border: "1px solid #e2e8f0",
+
+  blueGlow: {
+    position: "absolute",
+    width: "380px",
+    height: "380px",
+    background: "#2563eb",
+    borderRadius: "50%",
+    filter: "blur(140px)",
+    opacity: 0.35,
+    top: "-80px",
+    left: "-80px",
   },
+
+  cyanGlow: {
+    position: "absolute",
+    width: "340px",
+    height: "340px",
+    background: "#06b6d4",
+    borderRadius: "50%",
+    filter: "blur(140px)",
+    opacity: 0.25,
+    bottom: "-100px",
+    right: "-80px",
+  },
+
+  card: {
+    position: "relative",
+    zIndex: 10,
+    width: "100%",
+    maxWidth: "430px",
+    background:
+      "rgba(15,23,42,0.75)",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    borderRadius: "30px",
+    padding: "45px 38px",
+    backdropFilter: "blur(20px)",
+    boxShadow:
+      "0 20px 60px rgba(0,0,0,0.5)",
+  },
+
   header: {
     textAlign: "center",
-    marginBottom: "32px",
+    marginBottom: "35px",
   },
-  logoBadge: {
-    fontSize: "40px",
-    marginBottom: "12px",
+
+  logoBox: {
+    width: "75px",
+    height: "75px",
+    borderRadius: "22px",
+    background:
+      "linear-gradient(to right,#2563eb,#06b6d4)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "34px",
+    margin: "0 auto 20px",
+    boxShadow:
+      "0 10px 40px rgba(37,99,235,0.4)",
   },
+
   mainTitle: {
-    fontSize: "26px",
-    fontWeight: "800",
-    color: "#1e293b",
-    margin: "0 0 8px 0",
+    fontSize: "38px",
+    fontWeight: "900",
+    color: "#fff",
+    margin: "0 0 10px 0",
+    letterSpacing: "1px",
   },
+
   subTitle: {
-    fontSize: "14px",
-    color: "#64748b",
-    lineHeight: "1.5",
+    fontSize: "15px",
+    color: "#94a3b8",
+    lineHeight: "1.6",
   },
+
   form: {
     display: "flex",
     flexDirection: "column",
-    gap: "20px",
+    gap: "22px",
   },
+
   inputGroup: {
     display: "flex",
     flexDirection: "column",
-    gap: "6px",
+    gap: "8px",
   },
+
   label: {
-    fontSize: "13px",
+    fontSize: "14px",
     fontWeight: "600",
-    color: "#475569",
+    color: "#cbd5e1",
   },
+
   inputWrapper: {
     position: "relative",
     display: "flex",
     alignItems: "center",
   },
+
   inputIcon: {
     position: "absolute",
-    left: "14px",
-    fontSize: "14px",
+    left: "15px",
+    fontSize: "16px",
     color: "#94a3b8",
   },
+
   input: {
     width: "100%",
-    padding: "12px 12px 12px 42px",
-    borderRadius: "10px",
-    border: "1px solid #cbd5e1",
+    padding: "15px 16px 15px 46px",
+    borderRadius: "14px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.04)",
+    color: "#fff",
     fontSize: "15px",
     outline: "none",
     boxSizing: "border-box",
   },
+
   eyeBtn: {
     position: "absolute",
-    right: "12px",
+    right: "14px",
     background: "none",
     border: "none",
     cursor: "pointer",
-    fontSize: "18px",
-    padding: "0",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    color: "#64748b",
+    fontSize: "16px",
+    color: "#94a3b8",
   },
+
   button: {
     width: "100%",
-    padding: "13px",
+    padding: "16px",
+    background:
+      "linear-gradient(to right,#2563eb,#06b6d4)",
     color: "#fff",
     border: "none",
-    borderRadius: "10px",
+    borderRadius: "16px",
     fontSize: "16px",
-    fontWeight: "700",
-    marginTop: "10px",
-    transition: "all 0.2s ease",
+    fontWeight: "800",
+    cursor: "pointer",
+    marginTop: "5px",
+    boxShadow:
+      "0 10px 35px rgba(37,99,235,0.35)",
   },
+
   footerText: {
-    marginTop: "24px",
+    marginTop: "28px",
     textAlign: "center",
     fontSize: "14px",
-    color: "#64748b",
+    color: "#94a3b8",
   },
+
   link: {
-    color: "#2563eb",
+    color: "#38bdf8",
     textDecoration: "none",
-    fontWeight: "600",
-    marginLeft: "4px",
+    fontWeight: "700",
   },
+
 };
 
 export default ForgotPassword;

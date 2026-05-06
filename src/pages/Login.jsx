@@ -3,222 +3,428 @@ import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/api";
 
 function Login() {
+
     const navigate = useNavigate();
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+
     const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
+
+    const [showPassword, setShowPassword] =
+        useState(false);
 
     const handleLogin = async (e) => {
+
         e.preventDefault();
+
         if (!email || !password) {
+
             alert("Please fill all fields");
             return;
+
         }
 
         setLoading(true);
+
         try {
-            const res = await loginUser({ email, password });
-            localStorage.setItem("token", res.data.token);
-            localStorage.setItem("user", JSON.stringify(res.data.user));
+
+            const res = await loginUser({
+                email,
+                password,
+            });
+
+            localStorage.setItem(
+                "token",
+                res.data.token
+            );
+
+            localStorage.setItem(
+                "user",
+                JSON.stringify(res.data.user)
+            );
+
             navigate("/dashboard");
+
         } catch (err) {
-            alert(err.response?.data?.message || "Login Failed ❌");
+
+            alert(
+                err.response?.data?.message ||
+                "Login Failed ❌"
+            );
+
         } finally {
+
             setLoading(false);
+
         }
     };
 
     return (
+
         <div style={styles.page}>
+
+            {/* RGB */}
+
+            <div style={styles.blueGlow}></div>
+            <div style={styles.cyanGlow}></div>
+
+            {/* CARD */}
+
             <div style={styles.card}>
-                {/* Header */}
+
+                {/* HEADER */}
+
                 <div style={styles.header}>
-                    <div style={styles.logoBadge}>⚓</div>
-                    <h1 style={styles.mainTitle}>Port Hub</h1>
-                    <p style={styles.subTitle}>Enter your credentials to access your account</p>
+
+                    <div style={styles.logoBox}>
+                        ⚡
+                    </div>
+
+                    <h1 style={styles.mainTitle}>
+                        NEXCORE
+                    </h1>
+
+                    <p style={styles.subTitle}>
+
+                        Secure Cloud Infrastructure
+                        Access Portal
+
+                    </p>
+
                 </div>
 
-                <form onSubmit={handleLogin} style={styles.form}>
-                    {/* Email */}
+                {/* FORM */}
+
+                <form
+                    onSubmit={handleLogin}
+                    style={styles.form}
+                >
+
+                    {/* EMAIL */}
+
                     <div style={styles.inputGroup}>
-                        <label style={styles.label}>Email Address</label>
+
+                        <label style={styles.label}>
+                            Email Address
+                        </label>
+
                         <div style={styles.inputWrapper}>
-                            <span style={styles.inputIcon}>@</span>
+
+                            <span style={styles.inputIcon}>
+                                @
+                            </span>
+
                             <input
                                 type="email"
-                                placeholder="admin@porthub.com"
+                                placeholder="admin@nexcore.com"
                                 value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                onChange={(e) =>
+                                    setEmail(e.target.value)
+                                }
                                 style={styles.input}
                                 required
                             />
+
                         </div>
+
                     </div>
 
-                    {/* Password */}
+                    {/* PASSWORD */}
+
                     <div style={styles.inputGroup}>
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <label style={styles.label}>Password</label>
+
+                        <div style={styles.passwordRow}>
+
+                            <label style={styles.label}>
+                                Password
+                            </label>
+
                             <Link
                                 to="/forgot-password"
                                 style={styles.forgotLink}
                             >
                                 Forgot Password?
-                            </Link>            </div>
+                            </Link>
+
+                        </div>
+
                         <div style={styles.inputWrapper}>
-                            <span style={styles.inputIcon}>🔒</span>
+
+                            <span style={styles.inputIcon}>
+                                🔒
+                            </span>
+
                             <input
-                                type={showPassword ? "text" : "password"}
+                                type={
+                                    showPassword
+                                        ? "text"
+                                        : "password"
+                                }
                                 placeholder="••••••••"
                                 value={password}
-                                onChange={(e) => setPassword(e.target.value)}
+                                onChange={(e) =>
+                                    setPassword(
+                                        e.target.value
+                                    )
+                                }
                                 style={styles.input}
                                 required
                             />
+
                             <button
                                 type="button"
-                                onClick={() => setShowPassword(!showPassword)}
+                                onClick={() =>
+                                    setShowPassword(
+                                        !showPassword
+                                    )
+                                }
                                 style={styles.eyeBtn}
                             >
-                                {showPassword ? "🙈" : "👁️"}
+                                {
+                                    showPassword
+                                        ? "🙈"
+                                        : "👁️"
+                                }
                             </button>
+
                         </div>
+
                     </div>
 
-                    {/* Submit Button */}
+                    {/* BUTTON */}
+
                     <button
                         type="submit"
                         disabled={loading}
                         style={{
                             ...styles.button,
-                            backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                            opacity:
+                                loading ? 0.7 : 1,
                         }}
                     >
-                        {loading ? "Authenticating..." : "Sign In"}
+
+                        {
+                            loading
+                                ? "Authenticating..."
+                                : "Access Dashboard"
+                        }
+
                     </button>
+
                 </form>
 
+                {/* FOOTER */}
+
                 <p style={styles.footerText}>
-                    Don't have an account?
-                    <Link to="/signup" style={styles.link}> Create one</Link>
+
+                    Don’t have an account?
+
+                    <Link
+                        to="/signup"
+                        style={styles.link}
+                    >
+                        {" "}
+                        Create Account
+                    </Link>
+
                 </p>
+
             </div>
+
         </div>
+
     );
 }
 
 const styles = {
+
     page: {
         minHeight: "100vh",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f1f5f9", // Light professional grey
-        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
+        background:
+            "linear-gradient(135deg,#020617,#0f172a,#111827)",
+        fontFamily:
+            "'Inter', system-ui, sans-serif",
+        overflow: "hidden",
+        position: "relative",
+        padding: "20px",
     },
+
+    blueGlow: {
+        position: "absolute",
+        width: "380px",
+        height: "380px",
+        background: "#2563eb",
+        borderRadius: "50%",
+        filter: "blur(140px)",
+        opacity: 0.35,
+        top: "-80px",
+        left: "-80px",
+    },
+
+    cyanGlow: {
+        position: "absolute",
+        width: "340px",
+        height: "340px",
+        background: "#06b6d4",
+        borderRadius: "50%",
+        filter: "blur(140px)",
+        opacity: 0.25,
+        bottom: "-100px",
+        right: "-80px",
+    },
+
     card: {
-        background: "#ffffff",
-        padding: "48px 40px",
-        borderRadius: "16px",
+        position: "relative",
+        zIndex: 10,
         width: "100%",
-        maxWidth: "400px",
-        boxShadow: "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)",
-        border: "1px solid #e2e8f0",
+        maxWidth: "430px",
+        background:
+            "rgba(15,23,42,0.75)",
+        border:
+            "1px solid rgba(255,255,255,0.08)",
+        borderRadius: "30px",
+        padding: "45px 38px",
+        backdropFilter: "blur(20px)",
+        boxShadow:
+            "0 20px 60px rgba(0,0,0,0.5)",
     },
+
     header: {
         textAlign: "center",
-        marginBottom: "32px",
+        marginBottom: "35px",
     },
-    logoBadge: {
-        fontSize: "40px",
-        marginBottom: "12px",
+
+    logoBox: {
+        width: "75px",
+        height: "75px",
+        borderRadius: "22px",
+        background:
+            "linear-gradient(to right,#2563eb,#06b6d4)",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        fontSize: "34px",
+        margin: "0 auto 20px",
+        boxShadow:
+            "0 10px 40px rgba(37,99,235,0.4)",
     },
+
     mainTitle: {
-        fontSize: "28px",
-        fontWeight: "800",
-        color: "#1e293b",
-        margin: "0 0 8px 0",
-        letterSpacing: "-0.5px",
+        fontSize: "38px",
+        fontWeight: "900",
+        color: "#fff",
+        margin: "0 0 10px 0",
+        letterSpacing: "1px",
     },
+
     subTitle: {
-        fontSize: "14px",
-        color: "#64748b",
-        lineHeight: "1.5",
+        fontSize: "15px",
+        color: "#94a3b8",
+        lineHeight: "1.6",
     },
+
     form: {
         display: "flex",
         flexDirection: "column",
-        gap: "20px",
+        gap: "22px",
     },
+
     inputGroup: {
         display: "flex",
         flexDirection: "column",
-        gap: "6px",
+        gap: "8px",
     },
+
     label: {
-        fontSize: "13px",
+        fontSize: "14px",
         fontWeight: "600",
-        color: "#475569",
+        color: "#cbd5e1",
     },
+
+    passwordRow: {
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+    },
+
+    forgotLink: {
+        fontSize: "13px",
+        color: "#38bdf8",
+        textDecoration: "none",
+        fontWeight: "600",
+    },
+
     inputWrapper: {
         position: "relative",
         display: "flex",
         alignItems: "center",
     },
+
     inputIcon: {
         position: "absolute",
-        left: "14px",
+        left: "15px",
         fontSize: "16px",
         color: "#94a3b8",
     },
+
     input: {
         width: "100%",
-        padding: "12px 12px 12px 42px",
-        borderRadius: "10px",
-        border: "1px solid #cbd5e1",
+        padding: "15px 16px 15px 46px",
+        borderRadius: "14px",
+        border:
+            "1px solid rgba(255,255,255,0.08)",
+        background:
+            "rgba(255,255,255,0.04)",
+        color: "#fff",
         fontSize: "15px",
         outline: "none",
         boxSizing: "border-box",
-        transition: "border 0.2s ease",
+        transition: "0.3s",
     },
+
     eyeBtn: {
         position: "absolute",
-        right: "10px",
+        right: "14px",
         background: "none",
         border: "none",
         cursor: "pointer",
         fontSize: "16px",
+        color: "#94a3b8",
     },
-    forgotLink: {
-        fontSize: "13px",
-        color: "#2563eb",
-        textDecoration: "none",
-        fontWeight: "500",
-    },
+
     button: {
         width: "100%",
-        padding: "13px",
+        padding: "16px",
+        background:
+            "linear-gradient(to right,#2563eb,#06b6d4)",
         color: "#fff",
         border: "none",
-        borderRadius: "10px",
+        borderRadius: "16px",
         fontSize: "16px",
-        fontWeight: "600",
+        fontWeight: "800",
         cursor: "pointer",
-        marginTop: "10px",
-        boxShadow: "0 1px 2px 0 rgba(0, 0, 0, 0.05)",
+        marginTop: "5px",
+        boxShadow:
+            "0 10px 35px rgba(37,99,235,0.35)",
     },
+
     footerText: {
-        marginTop: "24px",
+        marginTop: "28px",
         textAlign: "center",
         fontSize: "14px",
-        color: "#64748b",
+        color: "#94a3b8",
     },
+
     link: {
-        color: "#2563eb",
+        color: "#38bdf8",
         textDecoration: "none",
-        fontWeight: "600",
+        fontWeight: "700",
     },
+
 };
 
 export default Login;
