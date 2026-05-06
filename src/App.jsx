@@ -55,7 +55,7 @@ function App() {
         <div style={styles.headerLeft}>
           <div style={styles.logoContainer}>
             <span style={styles.logoIcon}>🌐</span>
-            <h1 style={styles.logoText}><span style={{ color: "#3b82f6" }}>Hub</span></h1>
+            <h1 style={styles.logoText}><span style={{ color: "#3b82f6" }}>HUB</span></h1>
           </div>
           <p style={styles.subtitle}>Unified Network Gateway & Registry Controller</p>
         </div>
