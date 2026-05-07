@@ -491,6 +491,32 @@ function SearchPort({ refresh }) {
 
         {`
 
+.table-scroll::-webkit-scrollbar {
+
+  width: 8px;
+
+}
+
+.table-scroll::-webkit-scrollbar-track {
+
+  background: #f1f5f9;
+
+}
+
+.table-scroll::-webkit-scrollbar-thumb {
+
+  background: #cbd5e1;
+  border-radius: 20px;
+
+}
+
+.table-scroll::-webkit-scrollbar-thumb:hover {
+
+  background: #94a3b8;
+
+}
+
+
           @keyframes slideUp {
 
             from {
@@ -859,13 +885,20 @@ const styles = {
     boxSizing: "border-box",
   },
 
-  tableCard: {
-    background: "#fff",
-    borderRadius: "18px",
-    overflow: "hidden",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.05)",
-  },
+ tableCard: {
+  background: "#fff",
+  borderRadius: "18px",
+  overflowY: "auto",
+  overflowX: "hidden",
+
+  maxHeight: "600px",
+
+  boxShadow:
+    "0 10px 30px rgba(0,0,0,0.05)",
+
+  scrollbarWidth: "thin",
+
+},
 
   table: {
     width: "100%",
