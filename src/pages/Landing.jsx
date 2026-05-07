@@ -7,9 +7,7 @@ function Landing() {
   const [ports, setPorts] = useState([]);
 
   useEffect(() => {
-
     fetchPorts();
-
   }, []);
 
   const fetchPorts = async () => {
@@ -188,143 +186,143 @@ function Landing() {
 
       </section>
 
-
       {/* FOOTER */}
 
-<footer style={styles.footer}>
+      <footer style={styles.footer}>
 
-  <div style={styles.footerGrid}>
+        <div style={styles.footerGrid}>
 
-    {/* BRAND */}
+          {/* BRAND */}
 
-    <div>
+          <div>
 
-      <div style={styles.footerLogo}>
+            <div style={styles.footerLogo}>
 
-        <div style={styles.footerLogoBox}>
-          ⚡
+              <div style={styles.footerLogoBox}>
+                ⚡
+              </div>
+
+              <div>
+
+                <h2 style={styles.footerBrand}>
+                  NEXCORE
+                </h2>
+
+                <p style={styles.footerSub}>
+                  Enterprise Infrastructure Platform
+                </p>
+
+              </div>
+
+            </div>
+
+            <p style={styles.footerDesc}>
+
+              Advanced cloud infrastructure and
+              secure port management platform
+              designed for enterprise-grade
+              networking environments.
+
+            </p>
+
+          </div>
+
+          {/* PLATFORM */}
+
+          <div>
+
+            <h3 style={styles.footerTitle}>
+              Platform
+            </h3>
+
+            <p style={styles.footerLink}>
+              Infrastructure
+            </p>
+
+            <p style={styles.footerLink}>
+              Port Routing
+            </p>
+
+            <p style={styles.footerLink}>
+              KVM Nodes
+            </p>
+
+            <p style={styles.footerLink}>
+              Security Layer
+            </p>
+
+          </div>
+
+          {/* INFRA */}
+
+          <div>
+
+            <h3 style={styles.footerTitle}>
+              Infrastructure
+            </h3>
+
+            <p style={styles.footerLink}>
+              Cloud Security
+            </p>
+
+            <p style={styles.footerLink}>
+              Server Monitoring
+            </p>
+
+            <p style={styles.footerLink}>
+              Network Stability
+            </p>
+
+            <p style={styles.footerLink}>
+              Data Protection
+            </p>
+
+          </div>
+
+          {/* CONTACT */}
+
+          <div>
+
+            <h3 style={styles.footerTitle}>
+              Contact
+            </h3>
+
+            <p style={styles.footerLink}>
+              support@nexcore.com
+            </p>
+
+            <p style={styles.footerLink}>
+              Mumbai, India
+            </p>
+
+            <p style={styles.footerLink}>
+              +91 98765 43210
+            </p>
+
+          </div>
+
         </div>
 
-        <div>
+        {/* BOTTOM */}
 
-          <h2 style={styles.footerBrand}>
-            NEXCORE
-          </h2>
+        <div style={styles.footerBottom}>
 
-          <p style={styles.footerSub}>
-            Enterprise Infrastructure Platform
+          <p>
+            © 2026 NEXCORE • All Rights Reserved
+          </p>
+
+          <p>
+            Developed By Azeem Noor
           </p>
 
         </div>
 
-      </div>
-
-      <p style={styles.footerDesc}>
-
-        Advanced cloud infrastructure and
-        secure port management platform
-        designed for enterprise-grade
-        networking environments.
-
-      </p>
-
-    </div>
-
-    {/* PLATFORM */}
-
-    <div>
-
-      <h3 style={styles.footerTitle}>
-        Platform
-      </h3>
-
-      <p style={styles.footerLink}>
-        Infrastructure
-      </p>
-
-      <p style={styles.footerLink}>
-        Port Routing
-      </p>
-
-      <p style={styles.footerLink}>
-        KVM Nodes
-      </p>
-
-      <p style={styles.footerLink}>
-        Security Layer
-      </p>
-
-    </div>
-
-    {/* COMPANY */}
-
-    <div>
-
-  <h3 style={styles.footerTitle}>
-    Infrastructure
-  </h3>
-
-  <p style={styles.footerLink}>
-    Cloud Security
-  </p>
-
-  <p style={styles.footerLink}>
-    Server Monitoring
-  </p>
-
-  <p style={styles.footerLink}>
-    Network Stability
-  </p>
-
-  <p style={styles.footerLink}>
-    Data Protection
-  </p>
-
-</div>
-
-    {/* CONTACT */}
-
-    <div>
-
-      <h3 style={styles.footerTitle}>
-        Contact
-      </h3>
-
-      <p style={styles.footerLink}>
-        support@nexcore.com
-      </p>
-
-      <p style={styles.footerLink}>
-        Mumbai, India
-      </p>
-
-      <p style={styles.footerLink}>
-        +91 98765 43210
-      </p>
-
-    </div>
-
-  </div>
-
-  {/* BOTTOM */}
-
-  <div style={styles.footerBottom}>
-
-    <p>
-      © 2026 NEXCORE • All Rights Reserved
-    </p>
-
-    <p>
-      Developed By Azeem Noor
-    </p>
-
-  </div>
-
-</footer>
+      </footer>
 
     </div>
 
   );
+
 }
 
 const styles = {
@@ -335,7 +333,7 @@ const styles = {
       "linear-gradient(135deg,#020617,#0f172a,#111827)",
     color: "#fff",
     fontFamily: "Inter, sans-serif",
-    overflow: "hidden",
+    overflowX: "hidden",
     display: "flex",
     flexDirection: "column",
   },
@@ -346,7 +344,7 @@ const styles = {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    padding: "18px 50px",
+    padding: "18px 25px",
     borderBottom:
       "1px solid rgba(255,255,255,0.08)",
     backdropFilter: "blur(20px)",
@@ -354,6 +352,8 @@ const styles = {
     top: 0,
     zIndex: 100,
     background: "rgba(2,6,23,0.7)",
+    flexWrap: "wrap",
+    gap: "15px",
   },
 
   logoSection: {
@@ -374,6 +374,7 @@ const styles = {
     fontSize: "22px",
     boxShadow:
       "0 10px 30px rgba(37,99,235,0.35)",
+    flexShrink: 0,
   },
 
   logo: {
@@ -392,6 +393,7 @@ const styles = {
   navButtons: {
     display: "flex",
     gap: "12px",
+    flexWrap: "wrap",
   },
 
   loginBtn: {
@@ -404,6 +406,7 @@ const styles = {
     background: "rgba(255,255,255,0.04)",
     fontWeight: "600",
     fontSize: "14px",
+    textAlign: "center",
   },
 
   signupBtn: {
@@ -417,6 +420,7 @@ const styles = {
       "linear-gradient(to right,#2563eb,#06b6d4)",
     boxShadow:
       "0 10px 30px rgba(37,99,235,0.35)",
+    textAlign: "center",
   },
 
   /* HERO */
@@ -426,12 +430,13 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: "25px 40px 10px",
+    padding: "40px 20px",
     textAlign: "center",
   },
 
   leftSection: {
     maxWidth: "1050px",
+    width: "100%",
   },
 
   badge: {
@@ -448,20 +453,21 @@ const styles = {
   },
 
   heading: {
-    fontSize: "82px",
-    lineHeight: "0.92",
+    fontSize: "clamp(42px, 10vw, 82px)",
+    lineHeight: "1",
     fontWeight: "900",
     marginBottom: "18px",
     marginTop: 0,
-    letterSpacing: "-3px",
+    letterSpacing: "-2px",
   },
 
   description: {
     color: "#cbd5e1",
-    fontSize: "20px",
+    fontSize: "clamp(15px, 3vw, 20px)",
     lineHeight: "1.6",
     maxWidth: "760px",
     margin: "auto",
+    padding: "0 10px",
   },
 
   /* STATS */
@@ -480,7 +486,9 @@ const styles = {
       "1px solid rgba(255,255,255,0.08)",
     padding: "24px",
     borderRadius: "24px",
-    minWidth: "210px",
+    minWidth: "220px",
+    flex: "1 1 250px",
+    maxWidth: "280px",
     backdropFilter: "blur(20px)",
     boxShadow:
       "0 15px 40px rgba(0,0,0,0.35)",
@@ -489,7 +497,7 @@ const styles = {
 
   statNumber: {
     margin: "16px 0 8px 0",
-    fontSize: "52px",
+    fontSize: "clamp(36px, 6vw, 52px)",
     fontWeight: "900",
   },
 
@@ -534,6 +542,7 @@ const styles = {
     display: "flex",
     justifyContent: "center",
     marginTop: "35px",
+    flexWrap: "wrap",
   },
 
   primaryBtn: {
@@ -547,91 +556,98 @@ const styles = {
     fontSize: "16px",
     boxShadow:
       "0 10px 35px rgba(37,99,235,0.35)",
+    textAlign: "center",
   },
 
   /* FOOTER */
 
   footer: {
-  marginTop: "20px",
-  padding: "55px 70px 25px",
-  borderTop:
-    "1px solid rgba(255,255,255,0.08)",
-  background:
-    "rgba(255,255,255,0.03)",
-  backdropFilter: "blur(20px)",
-},
+    marginTop: "20px",
+    padding: "55px 25px 25px",
+    borderTop:
+      "1px solid rgba(255,255,255,0.08)",
+    background:
+      "rgba(255,255,255,0.03)",
+    backdropFilter: "blur(20px)",
+  },
 
-footerGrid: {
-  display: "grid",
-  gridTemplateColumns:
-    "2fr 1fr 1fr 1fr",
-  gap: "50px",
-},
+  footerGrid: {
+    display: "grid",
+    gridTemplateColumns:
+      "repeat(auto-fit,minmax(220px,1fr))",
+    gap: "40px",
+  },
 
-footerLogo: {
-  display: "flex",
-  alignItems: "center",
-  gap: "14px",
-  marginBottom: "20px",
-},
+  footerLogo: {
+    display: "flex",
+    alignItems: "center",
+    gap: "14px",
+    marginBottom: "20px",
+    flexWrap: "wrap",
+  },
 
-footerLogoBox: {
-  width: "52px",
-  height: "52px",
-  borderRadius: "16px",
-  background:
-    "linear-gradient(to right,#2563eb,#06b6d4)",
-  display: "flex",
-  justifyContent: "center",
-  alignItems: "center",
-  fontSize: "24px",
-  boxShadow:
-    "0 10px 30px rgba(37,99,235,0.35)",
-},
+  footerLogoBox: {
+    width: "52px",
+    height: "52px",
+    borderRadius: "16px",
+    background:
+      "linear-gradient(to right,#2563eb,#06b6d4)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    fontSize: "24px",
+    boxShadow:
+      "0 10px 30px rgba(37,99,235,0.35)",
+    flexShrink: 0,
+  },
 
-footerBrand: {
-  margin: 0,
-  fontSize: "28px",
-  fontWeight: "900",
-},
+  footerBrand: {
+    margin: 0,
+    fontSize: "28px",
+    fontWeight: "900",
+  },
 
-footerSub: {
-  color: "#94a3b8",
-  marginTop: "4px",
-  fontSize: "13px",
-},
+  footerSub: {
+    color: "#94a3b8",
+    marginTop: "4px",
+    fontSize: "13px",
+  },
 
-footerDesc: {
-  color: "#94a3b8",
-  lineHeight: "1.8",
-  maxWidth: "400px",
-  fontSize: "15px",
-},
+  footerDesc: {
+    color: "#94a3b8",
+    lineHeight: "1.8",
+    maxWidth: "400px",
+    fontSize: "15px",
+  },
 
-footerTitle: {
-  marginBottom: "18px",
-  fontSize: "18px",
-  fontWeight: "800",
-},
+  footerTitle: {
+    marginBottom: "18px",
+    fontSize: "18px",
+    fontWeight: "800",
+  },
 
-footerLink: {
-  color: "#94a3b8",
-  marginBottom: "12px",
-  cursor: "pointer",
-  transition: "0.3s",
-},
+  footerLink: {
+    color: "#94a3b8",
+    marginBottom: "12px",
+    cursor: "pointer",
+    transition: "0.3s",
+  },
 
-footerBottom: {
-  marginTop: "45px",
-  paddingTop: "20px",
-  borderTop:
-    "1px solid rgba(255,255,255,0.08)",
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "center",
-  color: "#94a3b8",
-  fontSize: "14px",
-},
+  footerBottom: {
+    marginTop: "45px",
+    paddingTop: "20px",
+    borderTop:
+      "1px solid rgba(255,255,255,0.08)",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    color: "#94a3b8",
+    fontSize: "14px",
+    flexWrap: "wrap",
+    gap: "10px",
+    textAlign: "center",
+  },
 
 };
+
 export default Landing;

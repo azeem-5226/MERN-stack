@@ -1,42 +1,71 @@
 import { Routes, Route } from "react-router-dom";
+import { useState } from "react";
 
 import AddPort from "./components/AddPort";
 import SearchPort from "./components/SearchPort";
 import Navbar from "./components/Navbar";
+
 import Landing from "./pages/Landing";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import ForgotPassword from "./pages/ForgotPassword";
 
 function Dashboard() {
+
+  // REALTIME REFRESH STATE
+
+  const [refresh, setRefresh] =
+    useState(false);
+
+  // REFRESH FUNCTION
+
+  const refreshData = () => {
+
+    setRefresh((prev) => !prev);
+
+  };
+
   return (
+
     <div style={styles.dashboardContainer}>
 
       {/* NAVBAR */}
+
       <Navbar />
 
       {/* GRID */}
+
       <main style={styles.grid}>
 
         {/* LEFT PANEL */}
+
         <section style={styles.panel}>
 
           <h2 style={styles.panelTitle}>
             📥 Register New Port
           </h2>
 
-          <AddPort />
+          {/* ADD PORT */}
+
+          <AddPort
+            refreshData={refreshData}
+          />
 
         </section>
 
         {/* RIGHT PANEL */}
+
         <section style={styles.panel}>
 
           <h2 style={styles.panelTitle}>
             🔍 Port Explorer
           </h2>
 
-          <SearchPort />
+          {/* SEARCH PORT */}
+
+          <SearchPort
+            refresh={refresh}
+          />
 
         </section>
 
@@ -52,40 +81,44 @@ function App() {
 
     <Routes>
 
-  {/* LANDING PAGE */}
-  <Route
-    path="/"
-    element={<Landing />}
-  />
+      {/* LANDING PAGE */}
 
-  {/* LOGIN */}
-  <Route
-    path="/login"
-    element={<Login />}
-  />
+      <Route
+        path="/"
+        element={<Landing />}
+      />
 
-  {/* SIGNUP */}
-  <Route
-    path="/signup"
-    element={<Signup />}
-  />
+      {/* LOGIN */}
 
-  {/* FORGOT PASSWORD */}
-  <Route
-    path="/forgot-password"
-    element={<ForgotPassword />}
-  />
+      <Route
+        path="/login"
+        element={<Login />}
+      />
 
-  {/* DASHBOARD */}
-  <Route
-    path="/dashboard"
-    element={<Dashboard />}
-  />
+      {/* SIGNUP */}
 
-</Routes>
+      <Route
+        path="/signup"
+        element={<Signup />}
+      />
+
+      {/* FORGOT PASSWORD */}
+
+      <Route
+        path="/forgot-password"
+        element={<ForgotPassword />}
+      />
+
+      {/* DASHBOARD */}
+
+      <Route
+        path="/dashboard"
+        element={<Dashboard />}
+      />
+
+    </Routes>
 
   );
-
 }
 
 const styles = {
@@ -107,13 +140,15 @@ const styles = {
     background: "#fff",
     padding: "25px",
     borderRadius: "20px",
-    boxShadow: "0 5px 20px rgba(0,0,0,0.05)",
+    boxShadow:
+      "0 5px 20px rgba(0,0,0,0.05)",
   },
 
   panelTitle: {
     marginBottom: "20px",
     color: "#0f172a",
   },
+
 };
 
 export default App;
