@@ -4,7 +4,6 @@ import React, {
 } from "react";
 
 import {
-  searchPort,
   getAllPorts,
   deletePort,
   updatePort
@@ -12,24 +11,85 @@ import {
 
 function SearchPort({ refresh }) {
 
-  const [portNumber, setPortNumber] =
+  const [searchText, setSearchText] =
     useState("");
 
   const [data, setData] =
     useState([]);
 
+  const [allData, setAllData] =
+    useState([]);
+
   const [isLoading, setIsLoading] =
     useState(false);
 
-  // REALTIME FETCH
+  // TOAST
+
+  const [toast, setToast] =
+    useState({
+      show: false,
+      message: "",
+      type: "success",
+    });
+
+  // DELETE MODAL
+
+  const [deleteModal, setDeleteModal] =
+    useState({
+      open: false,
+      port: null,
+    });
+
+  // EDIT MODAL
+
+  const [editModal, setEditModal] =
+    useState({
+      open: false,
+      data: null,
+    });
+
+  // EDIT FORM
+
+  const [editForm, setEditForm] =
+    useState({
+      serverName: "",
+      portNumber: "",
+      website: "",
+      service: "",
+    });
+
+  // TOAST
+
+  const showToast = (
+    message,
+    type = "success"
+  ) => {
+
+    setToast({
+      show: true,
+      message,
+      type,
+    });
+
+    setTimeout(() => {
+
+      setToast({
+        show: false,
+        message: "",
+        type: "success",
+      });
+
+    }, 3000);
+
+  };
+
+  // FETCH
 
   useEffect(() => {
 
     fetchAll();
 
   }, [refresh]);
-
-  // FETCH ALL PORTS
 
   const fetchAll = async () => {
 
@@ -42,136 +102,388 @@ function SearchPort({ refresh }) {
 
       setData(res.data);
 
+      setAllData(res.data);
+
     } catch (err) {
 
-      console.log(err);
+      showToast(
+        "Failed to load data ❌",
+        "error"
+      );
 
     } finally {
 
       setIsLoading(false);
 
     }
+
   };
 
   // SEARCH
 
-  const handleSearch = async () => {
+  const handleSearch = (
+    value
+  ) => {
 
-    if (!portNumber) {
+    setSearchText(value);
 
-      fetchAll();
+    if (!value.trim()) {
+
+      setData(allData);
       return;
 
     }
 
-    try {
+    const search =
+      value.toLowerCase();
 
-      const res =
-        await searchPort(portNumber);
+    const filtered =
+      allData.filter((item) => {
 
-      setData(
-        res.data ? [res.data] : []
-      );
+        return (
 
-    } catch {
+          item.serverName
+            ?.toLowerCase()
+            .includes(search)
 
-      setData([]);
+          ||
 
-    }
+          item.website
+            ?.toLowerCase()
+            .includes(search)
+
+          ||
+
+          item.service
+            ?.toLowerCase()
+            .includes(search)
+
+          ||
+
+          String(
+            item.portNumber
+          ).includes(search)
+
+        );
+
+      });
+
+    setData(filtered);
+
   };
 
   // DELETE
 
-  const handleDelete = async (port) => {
+  const confirmDelete =
+    async () => {
 
-    const confirmDelete =
-      window.confirm(
-        "Delete this port?"
-      );
+      try {
 
-    if (!confirmDelete) return;
+        const res =
+          await deletePort(
+            deleteModal.port
+          );
 
-    try {
+        showToast(
+          res.data.message ||
+          "Deleted Successfully ✅"
+        );
 
-      await deletePort(port);
+        setDeleteModal({
+          open: false,
+          port: null,
+        });
 
-      alert(
-        "Deleted Successfully ✅"
-      );
+        fetchAll();
 
-      fetchAll();
+      } catch (err) {
 
-    } catch (err) {
+        showToast(
+          "Delete Failed ❌",
+          "error"
+        );
 
-      alert("Delete Error ❌");
+      }
 
-    }
-  };
+    };
 
-  // EDIT
+  // OPEN EDIT
 
-  const handleEdit = async (item) => {
+  const openEditModal = (
+    item
+  ) => {
 
-    const newServer =
-      prompt(
-        "Enter Server Name",
-        item.serverName
-      );
+    setEditModal({
+      open: true,
+      data: item,
+    });
 
-    const newPort =
-      prompt(
-        "Enter Port Number",
-        item.portNumber
-      );
+    setEditForm({
 
-    const newWebsite =
-      prompt(
-        "Enter Website",
-        item.website
-      );
+      serverName:
+        item.serverName,
 
-    const newService =
-      prompt(
-        "Enter Service/KVM",
-        item.service
-      );
-
-    if (
-      !newServer ||
-      !newPort ||
-      !newWebsite ||
-      !newService
-    ) return;
-
-    try {
-
-      await updatePort(
+      portNumber:
         item.portNumber,
-        {
-          serverName: newServer,
-          portNumber:
-            Number(newPort),
-          website: newWebsite,
-          service: newService,
-        }
-      );
 
-      alert(
-        "Updated Successfully ✅"
-      );
+      website:
+        item.website,
 
-      fetchAll();
+      service:
+        item.service,
 
-    } catch (err) {
+    });
 
-      alert("Update Error ❌");
-
-    }
   };
+
+  // UPDATE
+
+  const handleUpdate =
+    async () => {
+
+      try {
+
+        const res =
+          await updatePort(
+            editModal.data.portNumber,
+            {
+              ...editForm,
+              portNumber:
+                Number(
+                  editForm.portNumber
+                ),
+            }
+          );
+
+        showToast(
+          res.data.message ||
+          "Updated Successfully ✅"
+        );
+
+        setEditModal({
+          open: false,
+          data: null,
+        });
+
+        fetchAll();
+
+      } catch (err) {
+
+        const errorMessage =
+          err.response?.data?.message ||
+          "Update Failed ❌";
+
+        showToast(
+          errorMessage,
+          "error"
+        );
+
+      }
+
+    };
 
   return (
 
     <div style={styles.pageWrapper}>
+
+      {/* TOAST */}
+
+      {
+
+        toast.show && (
+
+          <div
+            style={{
+              ...styles.toast,
+
+              background:
+                toast.type ===
+                  "success"
+
+                  ?
+
+                  "linear-gradient(to right,#22c55e,#16a34a)"
+
+                  :
+
+                  "linear-gradient(to right,#ef4444,#dc2626)",
+            }}
+          >
+
+            {toast.message}
+
+          </div>
+
+        )
+
+      }
+
+      {/* DELETE MODAL */}
+
+      {
+
+        deleteModal.open && (
+
+          <div style={styles.overlay}>
+
+            <div style={styles.modal}>
+
+              <h2 style={styles.modalTitle}>
+                Delete Port
+              </h2>
+
+              <p style={styles.modalText}>
+                Are you sure you want
+                to delete this port?
+              </p>
+
+              <div style={styles.modalButtons}>
+
+                <button
+                  onClick={() =>
+                    setDeleteModal({
+                      open: false,
+                      port: null,
+                    })
+                  }
+                  style={styles.cancelBtn}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={
+                    confirmDelete
+                  }
+                  style={styles.deleteConfirmBtn}
+                >
+                  Delete
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )
+
+      }
+
+      {/* EDIT MODAL */}
+
+      {
+
+        editModal.open && (
+
+          <div style={styles.overlay}>
+
+            <div style={styles.modal}>
+
+              <h2 style={styles.modalTitle}>
+                Edit Port
+              </h2>
+
+              <div style={styles.formGroup}>
+
+                <input
+                  type="text"
+                  placeholder="Server Name"
+                  value={
+                    editForm.serverName
+                  }
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      serverName:
+                        e.target.value,
+                    })
+                  }
+                  style={styles.modalInput}
+                />
+
+                <input
+                  type="number"
+                  placeholder="Port Number"
+                  value={
+                    editForm.portNumber
+                  }
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      portNumber:
+                        e.target.value,
+                    })
+                  }
+                  style={styles.modalInput}
+                />
+
+                <input
+                  type="text"
+                  placeholder="Website"
+                  value={
+                    editForm.website
+                  }
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      website:
+                        e.target.value,
+                    })
+                  }
+                  style={styles.modalInput}
+                />
+
+                <input
+                  type="text"
+                  placeholder="KVM"
+                  value={
+                    editForm.service
+                  }
+                  onChange={(e) =>
+                    setEditForm({
+                      ...editForm,
+                      service:
+                        e.target.value,
+                    })
+                  }
+                  style={styles.modalInput}
+                />
+
+              </div>
+
+              <div style={styles.modalButtons}>
+
+                <button
+                  onClick={() =>
+                    setEditModal({
+                      open: false,
+                      data: null,
+                    })
+                  }
+                  style={styles.cancelBtn}
+                >
+                  Cancel
+                </button>
+
+                <button
+                  onClick={
+                    handleUpdate
+                  }
+                  style={styles.saveBtn}
+                >
+                  Save Changes
+                </button>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        )
+
+      }
 
       {/* ANIMATION */}
 
@@ -184,36 +496,38 @@ function SearchPort({ refresh }) {
             from {
 
               opacity: 0;
-              transform: translateY(20px);
+              transform:
+                translateY(20px);
 
             }
 
             to {
 
               opacity: 1;
-              transform: translateY(0);
+              transform:
+                translateY(0);
 
             }
 
           }
 
-          .animate-in {
+          @keyframes slideIn {
 
-            animation:
-              slideUp 0.5s ease forwards;
+            from {
 
-          }
+              opacity: 0;
+              transform:
+                translateX(120px);
 
-          .table-row {
+            }
 
-            transition: 0.2s;
+            to {
 
-          }
+              opacity: 1;
+              transform:
+                translateX(0);
 
-          .table-row:hover {
-
-            background-color:
-              #f8fafc;
+            }
 
           }
 
@@ -221,10 +535,7 @@ function SearchPort({ refresh }) {
 
       </style>
 
-      <div
-        style={styles.container}
-        className="animate-in"
-      >
+      <div style={styles.container}>
 
         {/* HEADER */}
 
@@ -235,8 +546,7 @@ function SearchPort({ refresh }) {
           </h2>
 
           <p style={styles.subHeading}>
-            Centralized Infrastructure
-            Monitoring
+            Centralized Infrastructure Monitoring
           </p>
 
         </header>
@@ -246,23 +556,16 @@ function SearchPort({ refresh }) {
         <div style={styles.searchBox}>
 
           <input
-            type="number"
-            placeholder="Search Port..."
-            value={portNumber}
+            type="text"
+            placeholder="Search Port / Server / Website / KVM"
+            value={searchText}
             onChange={(e) =>
-              setPortNumber(
+              handleSearch(
                 e.target.value
               )
             }
             style={styles.input}
           />
-
-          <button
-            onClick={handleSearch}
-            style={styles.searchBtn}
-          >
-            Search
-          </button>
 
         </div>
 
@@ -331,7 +634,6 @@ function SearchPort({ refresh }) {
 
                     <tr
                       key={item._id}
-                      className="table-row"
                     >
 
                       <td style={styles.td}>
@@ -360,7 +662,7 @@ function SearchPort({ refresh }) {
 
                           <button
                             onClick={() =>
-                              handleEdit(item)
+                              openEditModal(item)
                             }
                             style={styles.editBtn}
                           >
@@ -369,9 +671,11 @@ function SearchPort({ refresh }) {
 
                           <button
                             onClick={() =>
-                              handleDelete(
-                                item.portNumber
-                              )
+                              setDeleteModal({
+                                open: true,
+                                port:
+                                  item.portNumber,
+                              })
                             }
                             style={styles.deleteBtn}
                           >
@@ -413,6 +717,118 @@ const styles = {
     width: "100%",
   },
 
+  toast: {
+    position: "fixed",
+    top: "25px",
+    right: "25px",
+    color: "#fff",
+    padding: "16px 24px",
+    borderRadius: "14px",
+    fontWeight: "700",
+    zIndex: 9999,
+    animation:
+      "slideIn 0.4s ease",
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,0.25)",
+  },
+
+  overlay: {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background:
+      "rgba(0,0,0,0.6)",
+    backdropFilter: "blur(6px)",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    zIndex: 999,
+  },
+
+  modal: {
+    width: "420px",
+    background:
+      "linear-gradient(135deg,#0f172a,#111827)",
+    padding: "30px",
+    borderRadius: "22px",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    boxShadow:
+      "0 20px 60px rgba(0,0,0,0.5)",
+    animation:
+      "slideUp 0.3s ease",
+  },
+
+  modalTitle: {
+    color: "#fff",
+    marginBottom: "14px",
+    fontSize: "28px",
+    fontWeight: "800",
+  },
+
+  modalText: {
+    color: "#cbd5e1",
+    marginBottom: "25px",
+  },
+
+  modalButtons: {
+    display: "flex",
+    justifyContent: "flex-end",
+    gap: "12px",
+    marginTop: "20px",
+  },
+
+  cancelBtn: {
+    background:
+      "rgba(255,255,255,0.08)",
+    color: "#fff",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "12px",
+    cursor: "pointer",
+  },
+
+  deleteConfirmBtn: {
+    background:
+      "linear-gradient(to right,#ef4444,#dc2626)",
+    color: "#fff",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "700",
+  },
+
+  saveBtn: {
+    background:
+      "linear-gradient(to right,#2563eb,#06b6d4)",
+    color: "#fff",
+    border: "none",
+    padding: "12px 18px",
+    borderRadius: "12px",
+    cursor: "pointer",
+    fontWeight: "700",
+  },
+
+  formGroup: {
+    display: "flex",
+    flexDirection: "column",
+    gap: "14px",
+  },
+
+  modalInput: {
+    background:
+      "rgba(255,255,255,0.05)",
+    border:
+      "1px solid rgba(255,255,255,0.08)",
+    color: "#fff",
+    padding: "14px",
+    borderRadius: "12px",
+    outline: "none",
+  },
+
   header: {
     textAlign: "center",
     marginBottom: "25px",
@@ -422,7 +838,6 @@ const styles = {
     fontSize: "30px",
     fontWeight: "800",
     color: "#0f172a",
-    marginBottom: "8px",
   },
 
   subHeading: {
@@ -430,29 +845,18 @@ const styles = {
   },
 
   searchBox: {
-    display: "flex",
-    gap: "12px",
     marginBottom: "25px",
   },
 
   input: {
-    flex: 1,
+    width: "100%",
     padding: "14px",
     borderRadius: "12px",
     border: "1px solid #dbeafe",
     background: "#f8fafc",
     outline: "none",
     fontSize: "15px",
-  },
-
-  searchBtn: {
-    background: "#2563eb",
-    color: "#fff",
-    border: "none",
-    padding: "14px 22px",
-    borderRadius: "12px",
-    cursor: "pointer",
-    fontWeight: "700",
+    boxSizing: "border-box",
   },
 
   tableCard: {
@@ -475,8 +879,8 @@ const styles = {
   th: {
     padding: "18px",
     textAlign: "center",
-    fontSize: "13px",
     color: "#64748b",
+    fontSize: "13px",
   },
 
   td: {

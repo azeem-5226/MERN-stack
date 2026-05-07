@@ -18,7 +18,7 @@ function AddPort({ refreshData }) {
   const [isLoading, setIsLoading] =
     useState(false);
 
-  // TOAST STATE
+  // TOAST
 
   const [toast, setToast] =
     useState({
@@ -56,15 +56,32 @@ function AddPort({ refreshData }) {
 
   const handleAdd = async () => {
 
+    // VALIDATION
+
     if (
-      !serverName ||
-      !portNumber ||
-      !website ||
-      !service
+      !serverName.trim() ||
+      !portNumber.trim() ||
+      !website.trim() ||
+      !service.trim()
     ) {
 
       showToast(
-        "Please fill all fields",
+        "Please fill all fields ❌",
+        "error"
+      );
+
+      return;
+
+    }
+
+    // PORT VALIDATION
+
+    if (
+      Number(portNumber) < 1
+    ) {
+
+      showToast(
+        "Invalid Port Number ❌",
         "error"
       );
 
@@ -76,12 +93,22 @@ function AddPort({ refreshData }) {
 
     try {
 
-      await addPort({
-        serverName,
-        portNumber,
-        website,
-        service,
-      });
+      const res =
+        await addPort({
+
+          serverName:
+            serverName.trim(),
+
+          portNumber:
+            Number(portNumber),
+
+          website:
+            website.trim(),
+
+          service:
+            service.trim(),
+
+        });
 
       // CLEAR FORM
 
@@ -90,14 +117,15 @@ function AddPort({ refreshData }) {
       setWebsite("");
       setService("");
 
-      // SUCCESS TOAST
+      // SUCCESS
 
       showToast(
+        res.data.message ||
         "Port Registered Successfully ✅",
         "success"
       );
 
-      // REFRESH DATA
+      // REALTIME REFRESH
 
       if (refreshData) {
 
@@ -110,7 +138,9 @@ function AddPort({ refreshData }) {
       console.log(err);
 
       const errorMessage =
+
         err.response?.data?.message ||
+
         "Registration Failed ❌";
 
       showToast(
@@ -123,6 +153,7 @@ function AddPort({ refreshData }) {
       setIsLoading(false);
 
     }
+
   };
 
   return (
@@ -132,23 +163,58 @@ function AddPort({ refreshData }) {
       {/* TOAST */}
 
       {
+
         toast.show && (
 
           <div
             style={{
               ...styles.toast,
+
               background:
-                toast.type === "success"
-                  ? "linear-gradient(to right,#22c55e,#16a34a)"
-                  : "linear-gradient(to right,#ef4444,#dc2626)",
+                toast.type ===
+                  "success"
+
+                  ?
+
+                  "linear-gradient(to right,#22c55e,#16a34a)"
+
+                  :
+
+                  "linear-gradient(to right,#ef4444,#dc2626)",
             }}
           >
 
-            {toast.message}
+            <div style={styles.toastContent}>
+
+              <span>
+
+                {
+
+                  toast.type ===
+                    "success"
+
+                    ?
+
+                    "✅"
+
+                    :
+
+                    "❌"
+
+                }
+
+              </span>
+
+              <span>
+                {toast.message}
+              </span>
+
+            </div>
 
           </div>
 
         )
+
       }
 
       {/* ANIMATION */}
@@ -157,27 +223,49 @@ function AddPort({ refreshData }) {
 
         {`
 
-        @keyframes slideIn {
+          @keyframes slideIn {
 
-          from {
+            from {
 
-            opacity: 0;
-            transform:
-              translateX(120px);
+              opacity: 0;
+              transform:
+                translateX(120px);
+
+            }
+
+            to {
+
+              opacity: 1;
+              transform:
+                translateX(0);
+
+            }
 
           }
 
-          to {
+          @keyframes pulse {
 
-            opacity: 1;
-            transform:
-              translateX(0);
+            0% {
+
+              transform: scale(1);
+
+            }
+
+            50% {
+
+              transform: scale(1.05);
+
+            }
+
+            100% {
+
+              transform: scale(1);
+
+            }
 
           }
 
-        }
-
-      `}
+        `}
 
       </style>
 
@@ -188,7 +276,7 @@ function AddPort({ refreshData }) {
         <div style={styles.header}>
 
           <div style={styles.iconCircle}>
-            ➕
+            ⚡
           </div>
 
           <h2 style={styles.title}>
@@ -196,8 +284,7 @@ function AddPort({ refreshData }) {
           </h2>
 
           <p style={styles.subtitle}>
-            Configure server port and
-            infrastructure details
+            Configure server ports and infrastructure routing
           </p>
 
         </div>
@@ -272,7 +359,7 @@ function AddPort({ refreshData }) {
 
           </div>
 
-          {/* SERVICE */}
+          {/* KVM */}
 
           <div style={styles.inputGroup}>
 
@@ -301,15 +388,31 @@ function AddPort({ refreshData }) {
             disabled={isLoading}
             style={{
               ...styles.button,
+
               opacity:
-                isLoading ? 0.7 : 1,
+                isLoading
+                  ? 0.7
+                  : 1,
+
+              cursor:
+                isLoading
+                  ? "not-allowed"
+                  : "pointer",
             }}
           >
 
             {
+
               isLoading
-                ? "Saving..."
-                : "Confirm & Save Port"
+
+                ?
+
+                "Saving Port..."
+
+                :
+
+                "Confirm & Save Port"
+
             }
 
           </button>
@@ -333,13 +436,15 @@ const styles = {
   },
 
   container: {
-    background: "#fff",
+    background: "#ffffff",
     width: "100%",
-    maxWidth: "450px",
-    borderRadius: "20px",
+    maxWidth: "480px",
+    borderRadius: "24px",
     padding: "35px",
     boxShadow:
-      "0 10px 30px rgba(0,0,0,0.08)",
+      "0 20px 60px rgba(0,0,0,0.08)",
+    border:
+      "1px solid #f1f5f9",
   },
 
   toast: {
@@ -347,52 +452,62 @@ const styles = {
     top: "25px",
     right: "25px",
     color: "#fff",
-    padding: "16px 24px",
-    borderRadius: "14px",
+    padding: "16px 22px",
+    borderRadius: "16px",
     fontWeight: "700",
-    boxShadow:
-      "0 10px 30px rgba(0,0,0,0.25)",
     zIndex: 9999,
     animation:
       "slideIn 0.4s ease",
+    boxShadow:
+      "0 10px 30px rgba(0,0,0,0.25)",
+  },
+
+  toastContent: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
   },
 
   header: {
     textAlign: "center",
-    marginBottom: "25px",
+    marginBottom: "28px",
   },
 
   iconCircle: {
-    width: "60px",
-    height: "60px",
-    background: "#f0fdf4",
-    color: "#22c55e",
+    width: "70px",
+    height: "70px",
     borderRadius: "50%",
+    background:
+      "linear-gradient(to right,#2563eb,#06b6d4)",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     margin: "auto",
-    fontSize: "24px",
-    marginBottom: "15px",
+    fontSize: "28px",
+    color: "#fff",
+    marginBottom: "18px",
+    animation:
+      "pulse 2s infinite",
   },
 
   title: {
     margin: 0,
-    fontSize: "28px",
+    fontSize: "34px",
+    fontWeight: "900",
     color: "#0f172a",
-    fontWeight: "800",
   },
 
   subtitle: {
     color: "#64748b",
-    marginTop: "8px",
-    fontSize: "14px",
+    marginTop: "10px",
+    fontSize: "15px",
+    lineHeight: "1.6",
   },
 
   formBody: {
     display: "flex",
     flexDirection: "column",
-    gap: "18px",
+    gap: "20px",
   },
 
   inputGroup: {
@@ -402,33 +517,37 @@ const styles = {
   label: {
     display: "block",
     marginBottom: "8px",
+    color: "#475569",
+    fontWeight: "800",
     fontSize: "12px",
-    color: "#64748b",
-    fontWeight: "700",
     letterSpacing: "1px",
   },
 
   input: {
     width: "100%",
-    padding: "14px",
-    borderRadius: "12px",
+    padding: "15px",
+    borderRadius: "14px",
     border: "1px solid #dbeafe",
     background: "#f8fafc",
     outline: "none",
     fontSize: "15px",
     boxSizing: "border-box",
+    transition: "0.2s",
   },
 
   button: {
     width: "100%",
-    padding: "15px",
+    padding: "16px",
     border: "none",
-    borderRadius: "12px",
+    borderRadius: "14px",
     color: "#fff",
     fontSize: "16px",
-    fontWeight: "700",
-    cursor: "pointer",
-    background: "#22c55e",
+    fontWeight: "800",
+    background:
+      "linear-gradient(to right,#22c55e,#16a34a)",
+    boxShadow:
+      "0 10px 25px rgba(34,197,94,0.25)",
+    transition: "0.3s",
   },
 
 };
